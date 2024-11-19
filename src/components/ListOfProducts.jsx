@@ -26,8 +26,13 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
       close: false,                             // Habilitar el botón de cerrar
       gravity: "bottom",                          // Posición en la pantalla (top/bottom)
       position: "right",                       // Posición en la pantalla (left/right)
-      backgroundColor: type === 'empty' ? '#ef4444' : 'linear-gradient(to right, #ef4444, #FDBA74)',
-      textColor: "black" , // Color de fondo
+      backgroundColor:
+        type === 'empty'
+          ? '#ef4444' 
+          : (type === 'delete'
+            ? 'linear-gradient(to right, #ef4444, #FDBA74)'  
+            : 'linear-gradient(to left, #3b82f6, #123e87)')  
+
     }).showToast();  // Esto mostrará el toast
   };
 
@@ -38,6 +43,53 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
       setCartDate(storedDate);
     }
   }, []);
+
+  const handleIncrement = (product) => {
+    const productExists = allProducts.some(p => p.id === product.id);
+
+    if (productExists) {
+      // Si el producto ya existe, incrementamos la cantidad en 1
+      const updatedProducts = allProducts.map(p =>
+        p.id === product.id
+          ? { ...p, quantity: p.quantity + 1 }  // Aumentamos la cantidad
+          : p  // Si no es el producto que queremos, lo dejamos igual
+      );
+
+      // Actualizamos el estado con los productos modificados
+      setAllProducts(updatedProducts);
+
+      // Guardamos los productos actualizados en localStorage
+      localStorage.setItem('products', JSON.stringify(updatedProducts));
+
+      // Mostramos un mensaje con el tipo 'update'
+      showToast('Cantidad actualizada', 'update');
+    }
+  }
+
+  const handleReduce = (product) => {
+    const updatedProducts = allProducts.map(p => {
+      if (p.id === product.id) {
+        // Si la cantidad es mayor que 1, la reducimos en 1
+        if (p.quantity > 1) {
+          return { ...p, quantity: p.quantity - 1 };
+        } else {
+          // Si la cantidad es 1, eliminamos el producto
+          return null; // Marcamos para eliminar
+        }
+      }
+      return p;
+    }).filter(p => p !== null); // Eliminamos los productos con null (que son los que tienen cantidad 1)
+
+    // Actualizamos el estado con los productos modificados
+    setAllProducts(updatedProducts);
+
+    // Guardamos los productos actualizados en localStorage
+    localStorage.setItem('products', JSON.stringify(updatedProducts));
+
+    // Mostramos el mensaje
+    showToast('Cantidad actualizada', 'update');
+  };
+
 
   useEffect(() => {
     if (allProducts.length > 0 && !cartDate) {
@@ -77,13 +129,13 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
 
                 <button onClick={handleEmptyCart} className="flex bg-red-500 text-white px-4 py-2 rounded-full gap-x-1 hover:bg-red-800  hover:scale-95 transition-all">Vaciar carrito
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#fff" fill="none">
-                    <path d="M8 16L16.7201 15.2733C19.4486 15.046 20.0611 14.45 20.3635 11.7289L21 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                    <path d="M6 6H8M22 6H18.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                    <path d="M10.5 3L13.5 6M13.5 6L16.5 9M13.5 6L10.5 9M13.5 6L16.5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                    <circle cx="6" cy="20" r="2" stroke="currentColor" stroke-width="1.5" />
-                    <circle cx="17" cy="20" r="2" stroke="currentColor" stroke-width="1.5" />
-                    <path d="M8 20L15 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                    <path d="M2 2H2.966C3.91068 2 4.73414 2.62459 4.96326 3.51493L7.93852 15.0765C8.08887 15.6608 7.9602 16.2797 7.58824 16.7616L6.63213 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                    <path d="M8 16L16.7201 15.2733C19.4486 15.046 20.0611 14.45 20.3635 11.7289L21 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M6 6H8M22 6H18.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M10.5 3L13.5 6M13.5 6L16.5 9M13.5 6L10.5 9M13.5 6L16.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <circle cx="6" cy="20" r="2" stroke="currentColor" strokeWidth="1.5" />
+                    <circle cx="17" cy="20" r="2" stroke="currentColor" strokeWidth="1.5" />
+                    <path d="M8 20L15 20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                    <path d="M2 2H2.966C3.91068 2 4.73414 2.62459 4.96326 3.51493L7.93852 15.0765C8.08887 15.6608 7.9602 16.2797 7.58824 16.7616L6.63213 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                   </svg>
                 </button>
 
@@ -99,10 +151,22 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
                         <img src={product.image} alt={product.title} className="max-w-20 max-h-20 rounded-md mx-auto group-hover:scale-125 transition-transform" />
                       </div>
                       <div className="w-full">
-                        <p className="mb-1 font-semibold">{product.title}</p>
-                        <p className="inline-block text-sm text-[#0d99ff] me-3 font-semibold">{product.quantity}x</p>
-                        <p className="inline-block text-sm text-gray-500 me-3"><span className="text-xs">@</span>${product.price}</p>
-                        <p className="inline-block text-sm text-gray-700 font-semibold">${product.price * product.quantity}</p>
+                        <p className="mb-2 font-semibold">{product.title}</p>
+                        <div className="flex items-center">
+                          <div className="flex gap-x-2 me-3">
+                            <button onClick={() => handleIncrement(product)} className="hover:cursor-pointer">
+                              <svg fill="#000000" width="20px" height="20px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16 0c-8.836 0-16 7.163-16 16s7.163 16 16 16c8.837 0 16-7.163 16-16s-7.163-16-16-16zM16 30.032c-7.72 0-14-6.312-14-14.032s6.28-14 14-14 14 6.28 14 14-6.28 14.032-14 14.032zM23 15h-6v-6c0-0.552-0.448-1-1-1s-1 0.448-1 1v6h-6c-0.552 0-1 0.448-1 1s0.448 1 1 1h6v6c0 0.552 0.448 1 1 1s1-0.448 1-1v-6h6c0.552 0 1-0.448 1-1s-0.448-1-1-1z"></path> </g></svg>
+                            </button>
+
+                            <p className="inline-block text-sm text-[#0d99ff] font-semibold">{product.quantity}</p>
+                            <button onClick={() => handleReduce(product)} className="hover:cursor-pointer">
+                              <svg width="20px" height="20px" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" fill="#000000"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>minus-circle</title> <desc>Created with Sketch Beta.</desc> <defs> </defs> <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd" sketch:type="MSPage"> <g id="Icon-Set" sketch:type="MSLayerGroup" transform="translate(-516.000000, -1087.000000)" fill="#000000"> <path d="M532,1117 C524.268,1117 518,1110.73 518,1103 C518,1095.27 524.268,1089 532,1089 C539.732,1089 546,1095.27 546,1103 C546,1110.73 539.732,1117 532,1117 L532,1117 Z M532,1087 C523.163,1087 516,1094.16 516,1103 C516,1111.84 523.163,1119 532,1119 C540.837,1119 548,1111.84 548,1103 C548,1094.16 540.837,1087 532,1087 L532,1087 Z M538,1102 L526,1102 C525.447,1102 525,1102.45 525,1103 C525,1103.55 525.447,1104 526,1104 L538,1104 C538.553,1104 539,1103.55 539,1103 C539,1102.45 538.553,1102 538,1102 L538,1102 Z" id="minus-circle" sketch:type="MSShapeGroup"> </path> </g> </g> </g></svg>
+                            </button>
+
+                          </div>
+                          <p className="inline-block text-sm text-gray-500 me-3"><span className="text-xs">@</span>${product.price}</p>
+                          <p className="inline-block text-sm text-gray-700 font-semibold">${product.price * product.quantity}</p>
+                        </div>
                       </div>
                       <div>
                         <button
@@ -136,7 +200,6 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
             </>
           )}
 
-          <dialog></dialog>
     </section>
   )
 }
