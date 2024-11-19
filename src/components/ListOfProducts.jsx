@@ -154,7 +154,7 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
 
                           </div>
                           <p className="inline-block text-sm text-gray-500 me-3"><span className="text-xs">@</span>${product.price}</p>
-                          <p className="inline-block text-sm text-gray-700 font-semibold">${product.price * product.quantity}</p>
+                          <p className="inline-block text-sm text-gray-700 font-semibold">${(product.price * product.quantity).toFixed(2)}</p>
                         </div>
                       </div>
                       <div>
