@@ -70,7 +70,7 @@ export default function AddProduct() {
   return (
     <>
       <div className="flex flex-col items-center justify-center gap-x-4 gap-y-4">
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#964B00]">Tienda - El Topo </h1>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#964B00] text-shadow-custom">Tienda - El Topo </h1>
         <svg className="h-[70px] w-[70px] sm:h-[100px] sm:w-[100px] lg:h-[115px] lg:w-[115px]" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 512 512" xmlSpace="preserve">
           <circle
             style={{ fill: "#7C665D" }}
