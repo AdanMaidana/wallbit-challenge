@@ -21,17 +21,12 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
 
   const showToast = (message, type) => {
     Toastify({
-      text: message,  // Mensaje del toast
-      duration: 3000,                          // Duración del toast en milisegundos
-      close: false,                             // Habilitar el botón de cerrar
-      gravity: "bottom",                          // Posición en la pantalla (top/bottom)
-      position: "right",                       // Posición en la pantalla (left/right)
-      backgroundColor:
-        type === 'empty'
-          ? '#ef4444' 
-          : (type === 'delete'
-            ? 'linear-gradient(to right, #ef4444, #FDBA74)'  
-            : 'linear-gradient(to left, #3b82f6, #123e87)')  
+      text: message,  
+      duration: 3000,                         
+      close: false,                             
+      gravity: "bottom",                      
+      position: "right",                      
+      backgroundColor: type === 'empty' ? '#ef4444' : 'linear-gradient(to right, #ef4444, #FDBA74)',
 
     }).showToast();  // Esto mostrará el toast
   };
@@ -60,9 +55,6 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
 
       // Guardamos los productos actualizados en localStorage
       localStorage.setItem('products', JSON.stringify(updatedProducts));
-
-      // Mostramos un mensaje con el tipo 'update'
-      showToast('Cantidad actualizada', 'update');
     }
   }
 
@@ -85,9 +77,6 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
 
     // Guardamos los productos actualizados en localStorage
     localStorage.setItem('products', JSON.stringify(updatedProducts));
-
-    // Mostramos el mensaje
-    showToast('Cantidad actualizada', 'update');
   };
 
 
@@ -119,16 +108,16 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
 
 
   return (
-    <section className="p-4 min-w-[445px] bg-white overflow-auto mt-8 rounded-md shadow-md shadow-zinc-800 border border-black">
+    <section className="p-4 w-full bg-white mt-8 rounded-md shadow-xl border border-black">
       {
         allProducts.length > 0 ?
           (
             <>
-              <div className="flex items-center justify-between p-4">
-                <p className="text-xl">Tú carrito ({productQuantity}) - Iniciado el {cartDate}</p>
+              <div className="flex flex-col items-start sm:items-center justify-between p-4 gap-y-2 mb-2 border-b sm:flex-row">
+                <p className="text-base md:text-xl">Tú carrito ({productQuantity}) - Iniciado el {cartDate}</p>
 
-                <button onClick={handleEmptyCart} className="flex bg-red-500 text-white px-4 py-2 rounded-full gap-x-1 hover:bg-red-800  hover:scale-95 transition-all">Vaciar carrito
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#fff" fill="none">
+                <button onClick={handleEmptyCart} className="flex items-center bg-red-500 text-white px-3 py-1 md:px-4 md:py-2 text-xs md:text-base rounded-full gap-x-1 md:gap-x-2 hover:bg-red-800  hover:scale-95 transition-all">Vaciar carrito
+                  <svg className="w-5 h-5 md:w-6 md:h-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" color="#fff" fill="none">
                     <path d="M8 16L16.7201 15.2733C19.4486 15.046 20.0611 14.45 20.3635 11.7289L21 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     <path d="M6 6H8M22 6H18.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
                     <path d="M10.5 3L13.5 6M13.5 6L16.5 9M13.5 6L10.5 9M13.5 6L16.5 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
@@ -143,12 +132,12 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
 
               </div>
 
-              <ul className="flex flex-col gap-y-4 max-h-[400px] overflow-y-auto">
+              <ul className="flex flex-col gap-y-2 sm:gap-y-0 max-h-[400px] overflow-y-auto">
                 {allProducts.map((product) =>
                   <React.Fragment key={`product-${product.id}`}>
-                    <li className="flex items-center justify-between gap-x-8 min-h-[100px] max-h-[100px] px-4 py-4">
-                      <div className="min-w-24 hover:cursor-pointer group" title="Ver detalles del producto">
-                        <img src={product.image} alt={product.title} className="max-w-20 max-h-20 rounded-md mx-auto group-hover:scale-125 transition-transform" />
+                    <li className="flex items-center justify-between gap-x-8 min-h-[170px] max-h-[170px] sm:min-h-[125px] sm:max-h-[125px] px-4 py-4">
+                      <div className="min-w-24">
+                        <img src={product.image} alt={product.title} className="max-w-20 max-h-20 mx-auto" />
                       </div>
                       <div className="w-full">
                         <p className="mb-2 font-semibold">{product.title}</p>
@@ -177,12 +166,12 @@ export default function ListOfProducts({ allProducts, setAllProducts }) {
                         </button>
                       </div>
                     </li>
-                    <hr className="w-[calc(100%-2rem)] mx-auto" />
+                    
                   </React.Fragment>
                 )}
               </ul>
-              <div className="px-4 pt-4 flex gap-x-4 justify-end">
-                <p>Precio Total: <span className="text-2xl font-bold ms-1 text-yellow-400">${totalPrice}</span></p>
+              <div className="px-4 pt-4 flex gap-x-4 justify-end text-end border-t">
+                <p>Precio Total: <span className="text-xl font-bold ms-1 text-yellow-400">${totalPrice}</span></p>
               </div>
             </>
           ) : (

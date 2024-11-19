@@ -16,14 +16,14 @@ export default function AddProduct() {
 
   const showToast = (message, type) => {
     Toastify({
-      text: message,  // Mensaje del toast
-      duration: 3000,                          // Duración del toast en milisegundos
-      close: false,                             // Habilitar el botón de cerrar
-      gravity: "bottom",                          // Posición en la pantalla (top/bottom)
-      position: "right",                       // Posición en la pantalla (left/right)
+      text: message,  
+      duration: 3000,                         
+      close: false,                             
+      gravity: "bottom",                          
+      position: "right",                       
       backgroundColor: type === 'add' ? '#3b82f6' : 'linear-gradient(to left, #3b82f6, #123e87)',
-      textColor: "black",   // Color de fondo
-    }).showToast();  // Esto mostrará el toast
+      textColor: "black",   
+    }).showToast();  
   };
 
   const handleProduct = (e) => {
@@ -69,9 +69,9 @@ export default function AddProduct() {
 
   return (
     <>
-      <div className="flex items-center justify-center gap-x-4">
-        <h1 className="text-5xl font-bold text-[#964B00]">Tienda - El Topo </h1>
-        <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" height="100px" width="100px" version="1.1" id="Layer_1" viewBox="0 0 512 512" xmlSpace="preserve">
+      <div className="flex flex-col items-center justify-center gap-x-4 gap-y-4">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#964B00]">Tienda - El Topo </h1>
+        <svg className="h-[70px] w-[70px] sm:h-[100px] sm:w-[100px] lg:h-[115px] lg:w-[115px]" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 512 512" xmlSpace="preserve">
           <circle
             style={{ fill: "#7C665D" }}
             cx="256"
@@ -103,12 +103,12 @@ export default function AddProduct() {
         </svg>
       </div>
 
-      <form onSubmit={handleProduct} className="bg-white mx-auto mt-8 p-4 border-2 border-zinc-400 min-w-[500px] w-fit text-center">
+      <form onSubmit={handleProduct} className="bg-white mx-auto mt-8 p-4 border border-zinc-400 shadow-lg w-full max-w-[345px] sm:max-w-[530px] text-center rounded-md">
         <p className="mb-4 text-left">Agrega los productos al carro de compra</p>
 
-        <div className="flex justify-between items-center flex-wrap gap-y-6">
+        <div className="flex items-center flex-wrap gap-y-6 gap-x-6 justify-center">
 
-          <div className="relative w-[100px]">
+          <div className="relative w-full sm:w-[100px]">
             <input
               name="product-quantity"
               type="number"
@@ -119,7 +119,7 @@ export default function AddProduct() {
             <label htmlFor="product-quantity" className="pointer-events-none absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto">Cantidad</label>
           </div>
 
-          <div className="relative w-[150px]">
+          <div className="relative w-full sm:w-[150px]">
             <input
               type="number"
               name="product-id"
